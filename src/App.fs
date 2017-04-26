@@ -90,9 +90,7 @@ let updateResults code =
             read = fun () -> Browser.document?readChar () :?> char |> byte
             print = fun i -> 
                 text.Add (char i)
-                results.innerText <- text.ToArray() |> System.String
-                results.focus ()
-                printfn "%s" (text.ToArray() |> System.String) }
+                results.innerText <- text.ToArray() |> System.String }
     results.innerText <- "(thinking...)"     
     Brainfuck.evalCode ioOp code |> ignore
     results.innerText <- text.ToArray() |> System.String
