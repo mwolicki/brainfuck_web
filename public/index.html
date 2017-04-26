@@ -6,6 +6,7 @@
 </head>
 <body>
   <h1>Brainfuck interpreter</h1>
+  Based on <a href="https://gist.github.com/mwolicki/8fa3749ea33c4d58edd57a38dc6abfaa">https://gist.github.com/mwolicki/8fa3749ea33c4d58edd57a38dc6abfaa</a>  
   <textarea rows = 20 style="width: 100%">
     [ This program prints "Hello World!" and a newline to the screen, its
   length is 106 active command characters. [It is not the shortest.]
@@ -51,10 +52,17 @@ Pointer :   ^
 >>+.                    Add 1 to Cell #5 gives us an exclamation point
 >++.                    And finally a newline from Cell #6
   </textarea>
+  <button type="Button">Run!</button>
   <div>
     Results:
   </div>
   <div id="results"></div>
+  <script>
+    document.readChar = function (){
+      return prompt("Char", "A")[0]
+    }
+  </script>
   <script src="bundle.js"></script>
+  
 </body>
 </html>

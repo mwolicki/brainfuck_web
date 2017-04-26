@@ -83,12 +83,16 @@ open Fable.Import
 
 
 let updateResults code =
-    printfn "c = %A" code
     let results = Browser.document.getElementById "results"
     let text = ResizeArray<_> ()
     let ioOp = 
         { Brainfuck.IOOp.def with
-            print = fun i -> text.Add (char i) }
+            read = fun () -> Browser.document?readChar () :?> char |> byte
+            print = fun i -> 
+                text.Add (char i)
+                results.innerText <- text.ToArray() |> System.String
+                results.focus ()
+                printfn "%s" (text.ToArray() |> System.String) }
     results.innerText <- "(thinking...)"     
     Brainfuck.evalCode ioOp code |> ignore
     results.innerText <- text.ToArray() |> System.String
@@ -96,10 +100,10 @@ let updateResults code =
 
 let init() =
     let textarea = Browser.document.getElementsByTagName_textarea().[0]
-    textarea.addEventListener_input(fun _ -> 
-        let textarea = Browser.document.getElementsByTagName_textarea().[0]
+    updateResults textarea.value
+    
+    Browser.document.getElementsByTagName_button().[0].addEventListener_click(fun _ -> 
         updateResults textarea.value
         box null)
-    updateResults textarea.value
 
 init()
