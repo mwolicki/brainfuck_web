@@ -110,14 +110,21 @@ let updateResults code =
     results.innerText <- "(thinking...)"     
     Brainfuck.evalCode ioOp code |> ignore
     results.innerText <- text.ToArray() |> System.String
+    
+    
+let refreashCSharpCode code =
     let codeDiv = Browser.document.getElementById "code"
     codeDiv.innerText <- (Brainfuck.codeToText code)
-    
-    
+
 
 let init() =
     let textarea = Browser.document.getElementsByTagName_textarea().[0]
     updateResults textarea.value
+    refreashCSharpCode textarea.value
+
+    textarea.addEventListener_change(fun _ ->
+        refreashCSharpCode textarea.value
+        box null)
     
     Browser.document.getElementsByTagName_button().[0].addEventListener_click(fun _ -> 
         updateResults textarea.value
