@@ -34,6 +34,7 @@ module Brainfuck =
                         let state = ops |> List.fold eval' state
                         eval' state x   
             List.fold eval' { currentIndex = 0; data = Map.empty }
+
         
     module private Parser =
         let allowedSymbols = set ['>'; '<'; '+'; '-'; '.'; ','; '['; ']']
@@ -76,6 +77,21 @@ module Brainfuck =
 
     let evalCode op : string -> State =  Parser.parse >> BrainfuckEval.evalCode op
 
+    let codeToText code =
+        let ast = Parser.parse code
+        let rec toDisplay tabs ast = 
+            let tab = Array.init tabs (fun _ -> '\t') |> System.String
+            match ast with
+            | [] -> ""
+            | IncPointer :: xs -> sprintf "%spointer++;\n" tab + toDisplay tabs xs
+            | DecPointer :: xs -> sprintf "%spointer--;\n" tab + toDisplay tabs xs
+            | Inc :: xs -> sprintf "%smemory[pointer]++;\n" tab + toDisplay tabs xs
+            | Dec  :: xs -> sprintf "%smemory[pointer]--;\n" tab + toDisplay tabs xs
+            | Print :: xs -> sprintf "%sSystem.Console.Write((char) memory[pointer]);\n" tab + toDisplay tabs xs
+            | Read :: xs -> sprintf "%smemory[pointer] = (byte)(char) System.Console.Read();\n" tab + toDisplay tabs xs
+            | While ops :: xs -> 
+                sprintf "%swhile(memory[pointer]!=0) {\n%s%s}\n" tab (toDisplay (tabs + 1) ops) tab  + toDisplay tabs xs
+        "var memory = new byte[1024];\nvar pointer = 0;\n" + toDisplay 0 ast
 
 open Fable.Core
 open Fable.Core.JsInterop
@@ -94,6 +110,9 @@ let updateResults code =
     results.innerText <- "(thinking...)"     
     Brainfuck.evalCode ioOp code |> ignore
     results.innerText <- text.ToArray() |> System.String
+    let codeDiv = Browser.document.getElementById "code"
+    codeDiv.innerText <- (Brainfuck.codeToText code)
+    
     
 
 let init() =
