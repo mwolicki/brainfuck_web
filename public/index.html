@@ -9,6 +9,8 @@
   <!-- Optional theme -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
+
+<script   src="https://code.jquery.com/jquery-3.2.1.min.js"   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="   crossorigin="anonymous"></script>
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
@@ -17,7 +19,7 @@
   Based on <a href="https://gist.github.com/mwolicki/8fa3749ea33c4d58edd57a38dc6abfaa">https://gist.github.com/mwolicki/8fa3749ea33c4d58edd57a38dc6abfaa</a>  
   <div class="content">
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-6">
         <textarea rows = 20 class="form-control">
           [ This program prints "Hello World!" and a newline to the screen, its
         length is 106 active command characters. [It is not the shortest.]
@@ -64,6 +66,24 @@
       >++.                    And finally a newline from Cell #6
         </textarea>
       </div>
+        <div class="col-sm-6 col-md-6">
+          <div class="panel-group" id="accordion">
+              <div class="panel panel-default">
+                  <a class="panel-default" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                  <div class="panel-heading">
+                      <h4 class="panel-title">
+                      c#
+                      </h4>
+                  </div>
+                  </a>                            
+                  <div id="collapseTwo" class="panel-collapse collapse out">
+                      <div class="panel-body">
+                        <pre id="code"></pre>        
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
       <div class="col-md-2">
         <blockquote class="blockquote">
           <strong>Result</strong> <br/>
@@ -71,19 +91,15 @@
         </blockquote>
       </div>
     </div>
-    <br>
     <div class="row">
-      <div class="col-md-8 text-right">
+      <div class="col-md-8">
         <button type="Button" class="btn btn-success">Run!</button>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-8 text-right">
-        <pre id="code"></pre>
-      </div>
+            
     </div>
 
- 
 
   <script>
     document.readChar = function (){
