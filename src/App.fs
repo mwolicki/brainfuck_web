@@ -2,12 +2,12 @@ module brainfuck_fable
 
 module Brainfuck =
     type State = { currentIndex : int
-                   data : Map<int, byte> }
+                   data : Map<int, int> }
     type Op = IncPointer | DecPointer | Inc | Dec | Print | Read | While of Op list
 
-    type IOOp = { read : unit -> byte
-                  print : byte -> unit }
-    with static member def = { read = fun () -> 0uy
+    type IOOp = { read : unit -> int
+                  print : int -> unit }
+    with static member def = { read = fun () -> 0
                                print = fun i -> () }
 
     module private BrainfuckEval =
@@ -16,20 +16,20 @@ module Brainfuck =
             let rec eval' state ops =
                 let currentVal = match state.data.TryFind state.currentIndex with
                                  | Some x -> x
-                                 | None -> 0uy
+                                 | None -> 0
                 match ops with
                 | IncPointer -> { state with currentIndex = state.currentIndex + 1 }
                 | DecPointer -> { state with currentIndex = state.currentIndex - 1 }
-                | Inc -> { state with data = state.data.Add (state.currentIndex, currentVal + 1uy) }
-                | Dec -> { state with data = state.data.Add (state.currentIndex, currentVal - 1uy) }
+                | Inc -> { state with data = state.data.Add (state.currentIndex, (currentVal + 1) % 256) }
+                | Dec -> { state with data = state.data.Add (state.currentIndex, (currentVal - 1) % 256) }
                 | Print ->
                     currentVal |> io.print
                     state
                 | Read ->
-                    let v = io.read()
+                    let v = io.read() % 256
                     { state with data = state.data.Add (state.currentIndex, v) }
                 | While ops as x ->
-                    if currentVal = 0uy then state
+                    if currentVal = 0 then state
                     else
                         let state = ops |> List.fold eval' state
                         eval' state x   
@@ -87,7 +87,7 @@ let updateResults code =
     let text = ResizeArray<_> ()
     let ioOp = 
         { Brainfuck.IOOp.def with
-            read = fun () -> Browser.document?readChar () :?> char |> byte
+            read = fun () -> Browser.document?readChar () :?> char |> int
             print = fun i -> 
                 text.Add (char i)
                 results.innerText <- text.ToArray() |> System.String }
